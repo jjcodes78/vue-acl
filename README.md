@@ -18,4 +18,85 @@ npm run dev
 npm run build
 ```
 
+# Configure AuthenticateController (Laravel)
+
+In your `AuthController` or create a new `AuthenticateController` and put the code above:
+
+```
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->only(['email', 'password']);
+
+        try {
+            if (! Auth::once($credentials)) {
+                return $this->ApiResponse(['error' => 'invalid_credentials'], Response::HTTP_UNAUTHORIZED);
+            }
+        } catch (JWTException $e) {
+            return $this->ApiResponse(['error' => 'could_not_create_token'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $user = Auth::user()->first(['id', 'name', 'email']);
+        $token = JWTAuth::fromUser($user);
+        $permissions = array_map(function ($permission) {
+           return $permission['name'];
+        }, $user->getAllPermissions()->toArray());
+
+        return Response()->json([
+            'token' => $token,
+            'user' => $user,
+            'permissions' => $permissions
+        ]);
+    }
+    
+    public function unauthenticate()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+
+        return $this->ApiResponse('user_logged_out');
+    }
+    
+    public function getAuthenticatedUser()
+    {
+        try {
+
+            if (! $user = JWTAuth::parseToken()->authenticate()) {
+                return $this->ApiResponse(['error' => 'user_not_found'], 404);
+            }
+
+            $permissions = array_map(function ($permission) {
+                return $permission['name'];
+            }, $user->getAllPermissions()->toArray());
+
+        } catch (TokenExpiredException $e) {
+
+            return $this->ApiResponse(['error' => 'token_expired'], $e->getStatusCode());
+
+        } catch (TokenInvalidException $e) {
+
+            return $this->ApiResponse(['error' => 'token_invalid'], $e->getStatusCode());
+
+        } catch (JWTException $e) {
+
+            return $this->ApiResponse(['error' => 'token_absent'], $e->getStatusCode());
+
+        }
+
+        // the token is valid and we have found the user via the sub claim
+        return $this->ApiResponse(['user' => $user, 'permissions' => $permissions]);
+    }
+```
+
+# Setting the routes
+
+Put current routes into your routes file:
+
+```
+  /*
+   * AUTH ROUTES
+   */
+  Route::post('auth', 'PATH_TO_YOUR_AUTH_CONTROLLER@authenticate');
+  Route::get('auth/logout', 'PATH_TO_YOUR_AUTH_CONTROLLER@unauthenticate');
+  Route::get('auth/profile', 'PATH_TO_YOUR_AUTH_CONTROLLER@getAuthenticatedUser');
+```
+
 For more information see the [docs for vueify](https://github.com/vuejs/vueify).
