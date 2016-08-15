@@ -17,8 +17,18 @@ npm run dev
 # build for production with minification
 npm run build
 ```
+# Configuring the Api (Laravel)
 
-# Configure AuthenticateController (Laravel)
+## Install JWT-Auth
+
+Run in terminal:
+
+`composer require tymon/jwt-auth`
+
+Configure the JWT-Auth. See [docs](https://github.com/tymondesigns/jwt-auth/wiki).
+JWT-Auth [github](https://github.com/tymondesigns/jwt-auth). 
+
+## Configure AuthenticateController (Laravel)
 
 In your `AuthController` or create a new `AuthenticateController` and put the code above:
 
@@ -86,7 +96,7 @@ In your `AuthController` or create a new `AuthenticateController` and put the co
     }
 ```
 
-# Setting the routes
+## Setting the routes
 
 Put current routes into your routes file:
 
