@@ -29,10 +29,10 @@ In your `AuthController` or create a new `AuthenticateController` and put the co
 
         try {
             if (! Auth::once($credentials)) {
-                return $this->ApiResponse(['error' => 'invalid_credentials'], Response::HTTP_UNAUTHORIZED);
+                return response()->json(['error' => 'invalid_credentials'], Response::HTTP_UNAUTHORIZED);
             }
         } catch (JWTException $e) {
-            return $this->ApiResponse(['error' => 'could_not_create_token'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => 'could_not_create_token'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $user = Auth::user()->first(['id', 'name', 'email']);
@@ -41,7 +41,7 @@ In your `AuthController` or create a new `AuthenticateController` and put the co
            return $permission['name'];
         }, $user->getAllPermissions()->toArray());
 
-        return Response()->json([
+        return response()->json([
             'token' => $token,
             'user' => $user,
             'permissions' => $permissions
@@ -52,7 +52,7 @@ In your `AuthController` or create a new `AuthenticateController` and put the co
     {
         JWTAuth::invalidate(JWTAuth::getToken());
 
-        return $this->ApiResponse('user_logged_out');
+        return response()->json('user_logged_out');
     }
     
     public function getAuthenticatedUser()
@@ -60,7 +60,7 @@ In your `AuthController` or create a new `AuthenticateController` and put the co
         try {
 
             if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return $this->ApiResponse(['error' => 'user_not_found'], 404);
+                return response()->json(['error' => 'user_not_found'], 404);
             }
 
             $permissions = array_map(function ($permission) {
@@ -69,20 +69,20 @@ In your `AuthController` or create a new `AuthenticateController` and put the co
 
         } catch (TokenExpiredException $e) {
 
-            return $this->ApiResponse(['error' => 'token_expired'], $e->getStatusCode());
+            return response()->json(['error' => 'token_expired'], $e->getStatusCode());
 
         } catch (TokenInvalidException $e) {
 
-            return $this->ApiResponse(['error' => 'token_invalid'], $e->getStatusCode());
+            return response()->json(['error' => 'token_invalid'], $e->getStatusCode());
 
         } catch (JWTException $e) {
 
-            return $this->ApiResponse(['error' => 'token_absent'], $e->getStatusCode());
+            return response()->json(['error' => 'token_absent'], $e->getStatusCode());
 
         }
 
         // the token is valid and we have found the user via the sub claim
-        return $this->ApiResponse(['user' => $user, 'permissions' => $permissions]);
+        return response()->json(['user' => $user, 'permissions' => $permissions]);
     }
 ```
 
