@@ -94,9 +94,9 @@ Put current routes into your routes file:
   /*
    * AUTH ROUTES
    */
-  Route::post('auth', 'PATH_TO_YOUR_AUTH_CONTROLLER@authenticate');
-  Route::get('auth/logout', 'PATH_TO_YOUR_AUTH_CONTROLLER@unauthenticate');
-  Route::get('auth/profile', 'PATH_TO_YOUR_AUTH_CONTROLLER@getAuthenticatedUser');
+  Route::post('auth', 'YOUR_AUTH_CONTROLLER@authenticate');
+  Route::get('auth/logout', 'YOUR_AUTH_CONTROLLER@unauthenticate');
+  Route::get('auth/profile', 'YOUR_AUTH_CONTROLLER@getAuthenticatedUser');
 ```
 
 For more information see the [docs for vueify](https://github.com/vuejs/vueify).
