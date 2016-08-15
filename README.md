@@ -1,6 +1,6 @@
-# Vue with ACL-Defender
+# Vue for ACL-Defender
 
-> FrontEnd com VueJS e ACL (via Artesaos/Defender)
+> FrontEnd com VueJS e ACL (para Artesaos/Defender)
 
 ## Build Setup
 
