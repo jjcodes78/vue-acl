@@ -19,16 +19,19 @@ npm run build
 ```
 # Configuring the Api (Laravel)
 
-## Install JWT-Auth
+## Install JWT-Auth and Artesaos/Defender
 
 Run in terminal:
 
 `composer require tymon/jwt-auth`
 
-Configure the JWT-Auth. See [docs](https://github.com/tymondesigns/jwt-auth/wiki).
-JWT-Auth [github](https://github.com/tymondesigns/jwt-auth). 
+`composer require artesaos/defender`
 
-## Configure AuthenticateController (Laravel)
+Configure the JWT-Auth. See [howto](https://github.com/tymondesigns/jwt-auth/wiki). JWT-Auth [github](https://github.com/tymondesigns/jwt-auth). 
+
+Configure the Defender. See [howto](https://github.com/artesaos/defender)
+
+## Setup a AuthenticateController (Laravel)
 
 In your `AuthController` or create a new `AuthenticateController` and put the code above:
 
